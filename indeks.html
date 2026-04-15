@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html><head><title>Prisma ABC.DEF 3D</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script></head>
+<body><script>
+// Simple 3D Prisma condong (a=2, angle 60°)
+const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer(); renderer.setSize(800,600); document.body.appendChild(renderer.domElement);
+const material = new THREE.MeshPhongMaterial({color:0x00ff00, transparent:true, opacity:0.7});
+const base = new THREE.Shape(); base.moveTo(0,0,0); base.lineTo(2,0,0); base.lineTo(1,1.732,0); // ABC a=2
+const extrudeSettings = {depth:1, bevelEnabled:false}; const geometryBase = new THREE.ExtrudeGeometry(base, extrudeSettings);
+const meshBase = new THREE.Mesh(geometryBase, material); scene.add(meshBase);
+// Lateral vec (dari perhitungan arah 60°)
+const vec = new THREE.Vector3(1, 0.577, 1.154); // arah AD
+const top = meshBase.clone(); top.position.add(vec); scene.add(top);
+// Rusuk tegak
+const edges = new THREE.EdgesGeometry(meshBase.geometry); const lineMat = new THREE.LineBasicMaterial({color:0xff0000});
+scene.add(new THREE.LineSegments(edges, lineMat)); scene.add(new THREE.LineSegments(edges, lineMat).translateOnAxis(vec,1));
+camera.position.set(3,3,3); camera.lookAt(1,0.866,0.5);
+const light = new THREE.DirectionalLight(0xffffff,1); light.position.set(5,5,5); scene.add(light);
+function animate(){requestAnimationFrame(animate); renderer.render(scene,camera);} animate();
+</script></body></html>
